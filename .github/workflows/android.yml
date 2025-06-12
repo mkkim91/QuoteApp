@@ -12,30 +12,31 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: Install system deps + Buildozer + Cython
       run: |
         sudo apt update
         sudo apt install -y zip unzip openjdk-17-jdk python3-pip git wget
         pip3 install --upgrade pip
         pip3 install buildozer cython
 
-    - name: Install Android SDK & NDK
+    - name: Install Android SDK
       run: |
-        mkdir -p ~/.buildozer/android/platform/android-sdk
-        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
-        unzip cmdline-tools.zip -d ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
-        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk --licenses
-        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk \
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O tools.zip
+        unzip tools.zip -d $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+        mv $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+        yes | $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk --licenses
+        $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk \
           "platform-tools" "platforms;android-31" "build-tools;31.0.0" "ndk;23.1.7779620"
 
-    - name: Set up buildozer
+    - name: Configure and patch buildozer.spec
       run: |
         buildozer init || true
         sed -i 's/^requirements = .*/requirements = python3,kivy,requests/' buildozer.spec
         sed -i 's/^package.domain = .*/package.domain = org.hamkay.quotespark/' buildozer.spec
         sed -i 's/^title = .*/title = QuoteSpark/' buildozer.spec
         echo "android.sdk_path = $HOME/.buildozer/android/platform/android-sdk" >> buildozer.spec
+        echo "android.ndk_path = $HOME/.buildozer/android/platform/android-ndk-r23b" >> buildozer.spec
 
     - name: Build APK
       run: buildozer android debug
