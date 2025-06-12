@@ -27,10 +27,11 @@ jobs:
         unzip sdk-tools.zip -d cmdline-tools
         mv cmdline-tools/cmdline-tools $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest
 
-    - name: Install Android SDK Packages
+    - name: Install Android SDK Packages and Accept Licenses
       run: |
-        echo "y" | $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk --licenses
-        $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk \
+        export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
+        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
           "platform-tools" "platforms;android-31" "build-tools;31.0.0" "ndk;23.1.7779620"
 
     - name: Configure buildozer.spec
