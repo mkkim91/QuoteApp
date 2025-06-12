@@ -41,6 +41,11 @@ jobs:
         sed -i 's/^title = .*/title = QuoteSpark/' buildozer.spec
         echo "android.sdk_path = $HOME/.buildozer/android/platform/android-sdk" >> buildozer.spec
         echo "android.ndk_path = $HOME/.buildozer/android/platform/android-ndk-r23b" >> buildozer.spec
+    
+    - name: Patch sdkmanager path for Buildozer
+      run: |
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/tools/bin
+        ln -s $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
 
     - name: Build APK
       run: buildozer android debug
