@@ -15,9 +15,11 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y zip unzip openjdk-17-jdk python3-pip git wget autoconf automake libtool gettext
+        sudo apt install -y zip unzip openjdk-17-jdk python3-pip git wget \
+          autoconf automake libtool gettext libltdl-dev
         pip3 install --upgrade pip
         pip3 install buildozer cython
+
 
     - name: Download Android SDK Command Line Tools
       run: |
