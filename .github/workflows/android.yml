@@ -24,9 +24,9 @@ jobs:
         mkdir -p $HOME/.buildozer/android/platform
         cd $HOME/.buildozer/android/platform
         wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O sdk-tools.zip
-        unzip sdk-tools.zip -d android-sdk
+        unzip sdk-tools.zip -d cmdline-tools-temp
         mkdir -p android-sdk/cmdline-tools/latest
-        mv android-sdk/cmdline-tools/* android-sdk/cmdline-tools/latest/
+        mv cmdline-tools-temp/* android-sdk/cmdline-tools/latest/
 
     - name: Install Android SDK Packages
       run: |
