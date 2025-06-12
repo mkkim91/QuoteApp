@@ -15,16 +15,27 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y zip unzip openjdk-17-jdk python3-pip git
+        sudo apt install -y zip unzip openjdk-17-jdk python3-pip git wget
+        pip3 install --upgrade pip
         pip3 install buildozer cython
+
+    - name: Install Android SDK & NDK
+      run: |
+        mkdir -p ~/.buildozer/android/platform/android-sdk
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
+        unzip cmdline-tools.zip -d ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk --licenses
+        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/.buildozer/android/platform/android-sdk \
+          "platform-tools" "platforms;android-31" "build-tools;31.0.0" "ndk;23.1.7779620"
 
     - name: Set up buildozer
       run: |
-        sudo apt install -y libffi-dev libssl-dev libsqlite3-dev libjpeg-dev zlib1g-dev
         buildozer init || true
         sed -i 's/^requirements = .*/requirements = python3,kivy,requests/' buildozer.spec
         sed -i 's/^package.domain = .*/package.domain = org.hamkay.quotespark/' buildozer.spec
         sed -i 's/^title = .*/title = QuoteSpark/' buildozer.spec
+        echo "android.sdk_path = $HOME/.buildozer/android/platform/android-sdk" >> buildozer.spec
 
     - name: Build APK
       run: buildozer android debug
