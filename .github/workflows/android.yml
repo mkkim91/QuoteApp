@@ -21,12 +21,11 @@ jobs:
 
     - name: Download Android SDK Command Line Tools
       run: |
-        mkdir -p $HOME/.buildozer/android/platform
-        cd $HOME/.buildozer/android/platform
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+        cd $HOME/.buildozer/android/platform/android-sdk
         wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O sdk-tools.zip
-        unzip sdk-tools.zip -d cmdline-tools-temp
-        mkdir -p android-sdk/cmdline-tools/latest
-        mv cmdline-tools-temp/* android-sdk/cmdline-tools/latest/
+        unzip sdk-tools.zip -d cmdline-tools
+        mv cmdline-tools/cmdline-tools $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest
 
     - name: Install Android SDK Packages
       run: |
