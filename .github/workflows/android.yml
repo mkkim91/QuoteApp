@@ -24,7 +24,7 @@ jobs:
         sudo apt install -y zip unzip openjdk-17-jdk python3-pip git wget \
           autoconf automake libtool gettext libltdl-dev
         pip install --upgrade pip
-        pip install buildozer cython
+        pip install buildozer "Cython==0.29.36"
 
     - name: Download Android SDK
       run: |
@@ -51,11 +51,15 @@ jobs:
     - name: Configure buildozer.spec
       run: |
         buildozer init || true
-        sed -i 's/^requirements = .*/requirements = python3,kivy,requests/' buildozer.spec
+        sed -i 's/^requirements = .*/requirements = python3,kivy,requests,cython==0.29.36/' buildozer.spec
         sed -i 's/^package.domain = .*/package.domain = org.hamkay.quotespark/' buildozer.spec
         sed -i 's/^title = .*/title = QuoteSpark/' buildozer.spec
         echo "p4a.local_recipes = ./recipes" >> buildozer.spec
         echo "arch = arm64-v8a" >> buildozer.spec
+
+    - name: Force clean build
+      run: |
+        rm -rf .buildozer android .gradle
 
     - name: Build APK
       run: buildozer android debug
