@@ -4,7 +4,7 @@ recipe:
 
   source:
     git: https://github.com/kivy/pyjnius.git
-    rev: 23fc49f9e5b1eeb5bc1c6f2e87751214b9f6f163  # LAST WORKING COMMIT BEFORE 'long' broke
+    rev: 23fc49f9e5b1eeb5bc1c6f2e87751214b9f6f163
 
   build:
     number: 1
